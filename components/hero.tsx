@@ -16,19 +16,7 @@ export function Hero() {
 
       <div className="w-full max-w-6xl mx-auto px-6 py-24 relative z-10 flex items-center">
         <div className="max-w-2xl text-left">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <span className="inline-flex items-center gap-2 bg-black/40 text-white/90 rounded-full px-4 py-2 text-sm">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M11.3 1.046a1 1 0 0 0-2.6 0l-.364 1.092a1 1 0 0 1-.948.69H6.07a1 1 0 0 0-.59 1.806l.884.684a1 1 0 0 1 .33.998l-.33 1.33a1 1 0 0 0 1.451 1.104l1.155-.59a1 1 0 0 1 1.017 0l1.155.59a1 1 0 0 0 1.451-1.104l-.33-1.33a1 1 0 0 1 .33-.998l.884-.684A1 1 0 0 0 13.93 3.828h-1.323a1 1 0 0 1-.948-.69L11.3 1.046z" />
-              </svg>
-              Premium Coffee Experience
-            </span>
-          </div>
+          <div className="inline-flex items-center gap-3 mb-6"></div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
             Kopi Terbaik,
