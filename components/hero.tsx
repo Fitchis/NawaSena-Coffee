@@ -8,7 +8,7 @@ export function Hero() {
     <section
       className="relative min-h-screen bg-cover bg-center flex items-center"
       style={{
-        backgroundImage: "url('/img/background/NawaSena-premium-coffee.png')",
+        backgroundImage: "url('/img/background/hero-bg.png')",
       }}
     >
       {/* dark gradient overlay (left heavy) */}
@@ -33,7 +33,7 @@ export function Hero() {
             <Link href="/menu">
               <Button
                 size="lg"
-                className="bg-[#FF4545] border border-white/20 text-white px-6 hover:bg-white/5"
+                className="bg-[#D92A2A] border border-white/20 text-white px-6 hover:bg-white/5"
               >
                 Pesan Sekarang -&gt;
               </Button>

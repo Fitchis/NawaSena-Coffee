@@ -5,7 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Award, Briefcase, Check, ArrowRight } from "lucide-react";
+import { Award, Briefcase, Check, Handshake } from "lucide-react";
 
 export default function CollaborationPage() {
   const [program, setProgram] = useState("Program Sponsorship");
@@ -51,93 +51,93 @@ export default function CollaborationPage() {
           <div className="text-center mb-12">
             <p className="text-[#FF4545]">Program Kerja sama</p>
             <h2 className="text-4xl font-semibold text-foreground">
-              Pilihan Kolaborasi Kami
+              Event & Kolaborasi
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="rounded-lg p-6 bg-gradient-to-br from-white to-amber-50 border border-border shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-700">
-                  <Award size={22} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-xl mb-1">
-                    Program Sponsorship
-                  </h3>
-                  <p className="text-foreground/70 mb-4">
-                    Jadilah mitra kami dalam acara-acara khusus dan dapatkan
-                    visibilitas brand yang lebih luas lewat event dan aktivitas
-                    pemasaran bersama.
-                  </p>
-
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="mt-1 text-emerald-500">
-                        <Check size={16} />
-                      </span>
-                      <span>Logo brand di materi event dan promosi</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="mt-1 text-emerald-500">
-                        <Check size={16} />
-                      </span>
-                      <span>Booth eksklusif & sampling produk</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="mt-1 text-emerald-500">
-                        <Check size={16} />
-                      </span>
-                      <span>Mention di social media resmi NawaSena</span>
-                    </li>
-                  </ul>
-                </div>
+            {/* Card 1: Program Sponsorship */}
+            <div className="rounded-2xl p-8 bg-gradient-to-br from-[#F4FAFF] to-[#E3F2FF] border border-blue-200 shadow-sm transition-transform transform hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-xl bg-white shadow-sm flex items-center justify-center mb-6">
+                <Handshake size={24} className="text-blue-600" />
               </div>
+
+              <h3 className="font-bold text-2xl mb-3 text-gray-900">
+                Program Sponsorship
+              </h3>
+              <p className="text-gray-700 mb-8 leading-relaxed">
+                Jadilah mitra kami dalam acara-acara khusus dan dapatkan
+                visibilitas brand yang luar biasa
+              </p>
+
+              <div className="font-bold text-gray-900 mb-4">
+                Benefit Program:
+              </div>
+              <ul className="space-y-3">
+                {[
+                  "Logo brand di event dan marketing materials",
+                  "Booth/stand eksklusif di acara NawaSena",
+                  "Mention di social media dan website",
+                  "Paket produk khusus untuk pelanggan sponsor",
+                  "Networking dengan komunitas kami",
+                  "Harga khusus untuk pembelian dalam jumlah besar",
+                ].map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-start gap-3 text-gray-600 text-sm"
+                  >
+                    <span className="mt-0.5 shrink-0 inline-flex items-center justify-center w-5 h-5 rounded-full border border-red-500 text-red-500">
+                      <Check size={12} strokeWidth={3} />
+                    </span>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            <div className="rounded-lg p-6 bg-gradient-to-br from-white to-sky-50 border border-border shadow-sm hover:shadow-lg transition-transform transform hover:-translate-y-1">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-full bg-sky-100 flex items-center justify-center text-sky-700">
-                  <Briefcase size={22} />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-xl mb-1">
-                    Program Pengadaan Tenant
-                  </h3>
-                  <p className="text-foreground/70 mb-4">
-                    Perluas jangkauan bisnis Anda dengan membuka tenant di
-                    lokasi strategis NawaSena — akses pelanggan dan dukungan
-                    marketing dari kami.
-                  </p>
-
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="mt-1 text-emerald-500">
-                        <Check size={16} />
-                      </span>
-                      <span>Lokasi premium dengan traffic tinggi</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="mt-1 text-emerald-500">
-                        <Check size={16} />
-                      </span>
-                      <span>Dukungan marketing & pelatihan barista</span>
-                    </li>
-                    <li className="flex items-start gap-3 text-foreground/70">
-                      <span className="mt-1 text-emerald-500">
-                        <Check size={16} />
-                      </span>
-                      <span>Konsultasi manajemen & paket onboarding</span>
-                    </li>
-                  </ul>
-                </div>
+            {/* Card 2: Program Pengadaan Tenant */}
+            <div className="rounded-2xl p-8 bg-gradient-to-br from-[#F2FCF5] to-[#E3F8EB] border border-emerald-200 shadow-sm transition-transform transform hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-xl bg-white shadow-sm flex items-center justify-center mb-6">
+                <Award size={24} className="text-emerald-600" />
               </div>
+
+              <h3 className="font-bold text-2xl mb-3 text-gray-900">
+                Program Pengadaan Tenant
+              </h3>
+              <p className="text-gray-700 mb-8 leading-relaxed">
+                Perluas bisnis Anda melalui kerjasama tenant di lokasi strategis
+                NawaSena
+              </p>
+
+              <div className="font-bold text-gray-900 mb-4">
+                Benefit Program:
+              </div>
+              <ul className="space-y-3">
+                {[
+                  "Lokasi premium dengan traffic tinggi",
+                  "Dukungan marketing dari NawaSena Cafe",
+                  "Pelatihan barista profesional",
+                  "Akses ke supplier terpercaya",
+                  "Sistem POS dan digital terintegrasi",
+                  "Konsultasi manajemen bisnis gratis",
+                ].map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-start gap-3 text-gray-600 text-sm"
+                  >
+                    <span className="mt-0.5 shrink-0 inline-flex items-center justify-center w-5 h-5 rounded-full border border-red-500 text-red-500">
+                      <Check size={12} strokeWidth={3} />
+                    </span>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
         {/* Contact form */}
-        <section className="bg-background py-12">
+        <section className="bg-[#F5EDE3] py-12">
           <div className="max-w-3xl mx-auto px-4">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold">Hubungi Kami Sekarang</h2>
@@ -157,7 +157,7 @@ export default function CollaborationPage() {
                     return;
                   }
 
-                  const whatsappNumber = "62881026970075";
+                  const whatsappNumber = "6281390070770";
                   const lines = [
                     "Halo NawaSena,",
                     "",
@@ -272,8 +272,8 @@ export default function CollaborationPage() {
 
             <div className="text-center text-sm text-foreground/70 mt-4">
               Atau hubungi kami langsung melalui: <br />{" "}
-              <a href="tel:+628812345678" className="text-primary">
-                +62 881 026 970 075
+              <a href="tel:+6281390070770" className="text-[#D92A2A]">
+                081390070770
               </a>
             </div>
           </div>

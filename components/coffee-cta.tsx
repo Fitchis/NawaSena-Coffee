@@ -15,11 +15,12 @@ export function CoffeeCta() {
 
       <div className="w-full max-w-6xl mx-auto px-6 py-20 relative z-10 text-center text-white">
         <h2 className="text-3xl md:text-4xl font-bold">
-          Pesan dari Meja Anda, Tanpa Antri
+          Pesan dari Meja <br />
+          Anda, Tanpa Antri
         </h2>
         <p className="mt-4 text-sm md:text-base text-white/80 max-w-2xl mx-auto">
-          Gunakan sistem pemesanan digital kami untuk pengalaman yang lebih
-          cepat dan nyaman.
+          Gunakan sistem pemesanan digital kami untuk pengalaman <br />
+          yang lebih cepat dan nyaman.
         </p>
 
         <div className="mt-8">

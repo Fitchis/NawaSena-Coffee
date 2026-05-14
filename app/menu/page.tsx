@@ -268,16 +268,25 @@ export default function MenuPage() {
     ).entries(),
   ).map(([id, name]) => ({ id, name }));
 
-  const filteredProducts =
-    selectedCategory === null
-      ? products
-      : selectedCategory === "kopi"
-        ? products.filter((p) =>
-            (p.categories?.name || "").toLowerCase().includes("kopi"),
-          )
-        : products.filter(
-            (p) => !(p.categories?.name || "").toLowerCase().includes("kopi"),
-          );
+  const filteredProducts = (() => {
+    if (selectedCategory === null) return products;
+    const key = (selectedCategory || "").toLowerCase();
+    if (key === "kopi") {
+      return products.filter((p) =>
+        (p.categories?.name || "").toLowerCase().includes("kopi"),
+      );
+    }
+    if (key === "makanan") {
+      return products.filter((p) =>
+        (p.categories?.name || "").toLowerCase().includes("makanan"),
+      );
+    }
+    // Minuman (fallback): items that are not kopi and not makanan
+    return products.filter((p) => {
+      const name = (p.categories?.name || "").toLowerCase();
+      return !name.includes("kopi") && !name.includes("makanan");
+    });
+  })();
 
   const handleAddToCart = (product: Product) => {
     // open modal to choose options
@@ -320,7 +329,7 @@ export default function MenuPage() {
               backgroundImage: "url('/img/background/NawaSena barista.png')",
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/60" />
+            <div className="absolute inset-0 bg-linear-to-r from-[#A61515]/40 via-[#A61515]/40 to-[#A61515]/40" />
             <div className="relative z-10 max-w-6xl mx-auto px-4 h-full flex items-end pb-6">
               <div>
                 <p className="text-sm text-white/80 uppercase mb-2 tracking-wider">
@@ -339,18 +348,18 @@ export default function MenuPage() {
           <div className="mb-8">
             <div className="rounded-lg border border-border bg-card p-1 flex items-center gap-2 max-w-lg">
               <button
-                onClick={() => setSelectedCategory("kopi")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-6 rounded-md transition-colors duration-150 ${
-                  selectedCategory === "kopi"
+                onClick={() => setSelectedCategory("Kopi")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-150 ${
+                  selectedCategory === "Kopi"
                     ? "bg-[#6b3f2a] text-white shadow-inner"
-                    : "bg-white text-foreground border border-border"
+                    : "bg-white text-foreground"
                 }`}
-                aria-pressed={selectedCategory === "kopi"}
+                aria-pressed={selectedCategory === "Kopi"}
               >
                 <Coffee size={16} />
                 <span
                   className={
-                    selectedCategory === "kopi"
+                    selectedCategory === "Kopi"
                       ? "font-semibold"
                       : "font-medium text-foreground/70"
                   }
@@ -360,23 +369,44 @@ export default function MenuPage() {
               </button>
 
               <button
-                onClick={() => setSelectedCategory("non-kopi")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-6 rounded-md transition-colors duration-150 ${
-                  selectedCategory === "non-kopi"
+                onClick={() => setSelectedCategory("Minuman")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-150 ${
+                  selectedCategory === "Minuman"
                     ? "bg-[#6b3f2a] text-white shadow-inner"
-                    : "bg-white text-foreground border border-border"
+                    : "bg-white text-foreground"
                 }`}
-                aria-pressed={selectedCategory === "non-kopi"}
+                aria-pressed={selectedCategory === "Minuman"}
               >
                 <Coffee size={16} />
                 <span
                   className={
-                    selectedCategory === "non-kopi"
+                    selectedCategory === "Minuman"
                       ? "font-semibold"
                       : "font-medium text-foreground/70"
                   }
                 >
-                  Non-Kopi
+                  Minuman
+                </span>
+              </button>
+
+              <button
+                onClick={() => setSelectedCategory("Makanan")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-150 ${
+                  selectedCategory === "Makanan"
+                    ? "bg-[#6b3f2a] text-white shadow-inner"
+                    : "bg-white text-foreground"
+                }`}
+                aria-pressed={selectedCategory === "Makanan"}
+              >
+                <Coffee size={16} />
+                <span
+                  className={
+                    selectedCategory === "Makanan"
+                      ? "font-semibold"
+                      : "font-medium text-foreground/70"
+                  }
+                >
+                  Makanan
                 </span>
               </button>
             </div>
@@ -421,16 +451,16 @@ export default function MenuPage() {
                         </CardDescription>
                       </CardHeader>
 
-                      <CardContent className="pb-3 flex-grow">
-                        <p className="text-2xl font-bold text-primary">
-                          Rp {product.price.toLocaleString("id-ID")}
-                        </p>
-                      </CardContent>
+                      <CardContent className="pb-3 flex-grow" />
 
-                      <CardFooter className="pt-3 gap-2">
+                      <CardFooter className="pt-3 gap-2 flex items-center justify-between">
+                        <div className="text-2xl font-bold text-primary">
+                          Rp {product.price.toLocaleString("id-ID")}
+                        </div>
+
                         <Button
                           onClick={() => handleAddToCart(product)}
-                          className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                          className="bg-[#D92A2A] hover:bg-[#D92A2A]/90 text-white px-4 py-2"
                         >
                           <ShoppingCart size={18} className="mr-2" />
                           Tambah
@@ -445,7 +475,7 @@ export default function MenuPage() {
                 <div className="sticky top-24 border border-border rounded-lg bg-card p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="bg-primary text-primary-foreground p-2 rounded-md">
+                      <div className="bg-[#D92A2A] text-primary-foreground p-2 rounded-md">
                         <ShoppingCart size={18} />
                       </div>
                       <h3 className="text-lg font-semibold">Keranjang</h3>
@@ -465,8 +495,13 @@ export default function MenuPage() {
 
                   {cartItems.length === 0 ? (
                     <div className="text-center py-8 text-foreground/60">
-                      <div className="text-xl">Keranjang masih kosong</div>
-                      <div className="text-sm mt-2">
+                      <div className="w-24 h-24 rounded-full bg-[#FFF4F4] border border-[#F2CACA] mx-auto flex items-center justify-center mb-4">
+                        <ShoppingCart size={36} className="text-[#D92A2A]" />
+                      </div>
+                      <div className="text-xl font-medium text-foreground mb-1">
+                        Keranjang masih kosong
+                      </div>
+                      <div className="text-sm mt-2 text-foreground/60">
                         Tambahkan menu untuk mulai memesan
                       </div>
                     </div>
@@ -570,7 +605,7 @@ export default function MenuPage() {
                         <div className="mt-4">
                           <Button
                             onClick={() => setIsCheckoutOpen(true)}
-                            className="w-full bg-[#6b3f2a] hover:opacity-95 text-white py-3"
+                            className="w-full bg-[#D92A2A] hover:opacity-95 text-white py-3"
                           >
                             Lanjutkan Pemesanan
                           </Button>
@@ -612,7 +647,7 @@ export default function MenuPage() {
                   <button
                     key={s}
                     onClick={() => setSugarLevel(s)}
-                    className={`py-2 px-3 rounded-md border ${sugarLevel === s ? "bg-primary text-white" : "bg-transparent"}`}
+                    className={`py-2 px-3 rounded-md border ${sugarLevel === s ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
                   >
                     {s}
                   </button>
@@ -627,7 +662,7 @@ export default function MenuPage() {
                   <button
                     key={i}
                     onClick={() => setIceLevel(i)}
-                    className={`py-2 px-3 rounded-md border ${iceLevel === i ? "bg-primary text-white" : "bg-transparent"}`}
+                    className={`py-2 px-3 rounded-md border ${iceLevel === i ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
                   >
                     {i}
                   </button>
@@ -703,7 +738,7 @@ export default function MenuPage() {
               </Button>
               <Button
                 onClick={confirmAddWithOptions}
-                className="flex-1 bg-primary text-primary-foreground"
+                className="flex-1 bg-[#D92A2A] text-white"
               >
                 Tambahkan ke Keranjang
               </Button>
@@ -754,7 +789,7 @@ export default function MenuPage() {
                 className={`flex items-center gap-2 ${checkoutStep === 1 ? "font-semibold" : "text-foreground/60"}`}
               >
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center ${checkoutStep === 1 ? "bg-primary text-white" : "bg-foreground/10 text-foreground/60"}`}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${checkoutStep === 1 ? "bg-[#D92A2A] text-white" : "bg-foreground/10 text-foreground/60"}`}
                 >
                   1
                 </div>
@@ -764,7 +799,7 @@ export default function MenuPage() {
                 className={`flex items-center gap-2 ${checkoutStep === 2 ? "font-semibold" : "text-foreground/60"}`}
               >
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center ${checkoutStep === 2 ? "bg-primary text-white" : "bg-foreground/10 text-foreground/60"}`}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${checkoutStep === 2 ? "bg-[#D92A2A] text-white" : "bg-foreground/10 text-foreground/60"}`}
                 >
                   2
                 </div>
@@ -774,7 +809,7 @@ export default function MenuPage() {
                 className={`flex items-center gap-2 ${checkoutStep === 3 ? "font-semibold" : "text-foreground/60"}`}
               >
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center ${checkoutStep === 3 ? "bg-primary text-white" : "bg-foreground/10 text-foreground/60"}`}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center ${checkoutStep === 3 ? "bg-[#D92A2A] text-white" : "bg-foreground/10 text-foreground/60"}`}
                 >
                   3
                 </div>
@@ -876,7 +911,7 @@ export default function MenuPage() {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-[#6b3f2a] text-white"
+                      className="flex-1 bg-[#D92A2A] text-white"
                     >
                       Lanjut
                     </Button>
@@ -998,7 +1033,7 @@ export default function MenuPage() {
                     </Button>
                     <Button
                       onClick={handleCreateOrder}
-                      className="flex-1 bg-[#6b3f2a] text-white"
+                      className="flex-1 bg-[#D92A2A] text-white"
                       disabled={checkoutLoading}
                     >
                       {checkoutLoading ? "Memproses..." : "Konfirmasi Pesanan"}

@@ -1,8 +1,24 @@
+export const runtime = "edge";
+
 import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
+    let formData: FormData | null = null;
+    try {
+      formData = await req.formData();
+    } catch (fdErr: any) {
+      const ct = req.headers.get("content-type") || "not-provided";
+      console.error("Failed to parse FormData:", fdErr);
+      return new Response(
+        JSON.stringify({
+          error: "Failed to parse body as FormData.",
+          contentType: ct,
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
     const file = formData.get("file") as any;
     if (!file) {
       return new Response(JSON.stringify({ error: "no file provided" }), {
@@ -41,12 +57,12 @@ export async function POST(req: Request) {
     });
 
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const uint8 = new Uint8Array(arrayBuffer);
     const filename = `${Date.now()}_${file.name}`;
 
     const { error } = await supabase.storage
       .from(bucket)
-      .upload(filename, buffer, {
+      .upload(filename, uint8, {
         contentType: file.type || "application/octet-stream",
         upsert: false,
       });

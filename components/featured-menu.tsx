@@ -41,11 +41,9 @@ export async function FeaturedMenu() {
       <div className="w-full max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="text-sm text-red-500 font-semibold">
-              PILIHAN TERBAIK
-            </p>
+            <p className="text-sm text-red-500 font-semibold">REKOMENDASI</p>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground">
-              Minuman Rekomendasi
+              Menu Best Seller
             </h2>
           </div>
           <div>
@@ -61,19 +59,21 @@ export async function FeaturedMenu() {
               key={item.id}
               className="hover:shadow-lg transition-shadow border-border bg-card rounded-lg overflow-hidden"
             >
-              <div className="h-44 w-full bg-gray-100 overflow-hidden">
+              {/* Mengatur tinggi container gambar agar proporsional */}
+              <div className="h-48 w-full bg-gray-100 overflow-hidden">
                 <img
-                  src={item.image_url || "/img/placeholder-drink.png"}
+                  src={item.image_url || "https://placehold.co/400"}
                   alt={item.name}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <CardHeader className="pt-4 pb-2 px-4">
-                <CardTitle className="text-foreground text-lg">
+                <CardTitle className="text-foreground text-lg truncate">
                   {item.name}
                 </CardTitle>
-                <CardDescription className="text-foreground/60">
+                {/* Menggunakan line-clamp-2 untuk membatasi deskripsi menjadi 2 baris */}
+                <CardDescription className="text-foreground/60 line-clamp-2">
                   {item.description}
                 </CardDescription>
               </CardHeader>

@@ -63,9 +63,41 @@ export default function ProductForm({
           const js = await up.json().catch(() => ({}));
           if (!up.ok) {
             console.error("Server upload failed", js);
-            alert(
-              `Upload failed: ${js.error?.message || JSON.stringify(js.error)}`,
-            );
+            // fallback: if parsing FormData failed on server, send base64 JSON
+            if (
+              js?.error === "Failed to parse body as FormData." ||
+              js?.contentType
+            ) {
+              try {
+                // fallback: send raw ArrayBuffer with filename header to avoid JSON/base64 size limits
+                const arrayBuffer = await file.arrayBuffer();
+                const filename = `${Date.now()}_${file.name}`;
+                const res = await fetch("/api/admin/upload-raw", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": file.type || "application/octet-stream",
+                    "X-Filename": filename,
+                  },
+                  body: arrayBuffer,
+                });
+                const js2 = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                  console.error("Raw upload failed", js2);
+                  alert(
+                    `Upload failed: ${js2.error?.message || JSON.stringify(js2.error)}`,
+                  );
+                } else {
+                  payload.image_url = js2.publicUrl ?? payload.image_url;
+                }
+              } catch (e) {
+                console.error("Raw fallback failed", e);
+                alert("Upload failed");
+              }
+            } else {
+              alert(
+                `Upload failed: ${js.error?.message || JSON.stringify(js.error)}`,
+              );
+            }
           } else {
             payload.image_url = js.publicUrl ?? payload.image_url;
           }
@@ -106,24 +138,18 @@ export default function ProductForm({
   }, [file, initial?.image_url]);
 
   useEffect(() => {
-    // derive categories from public products endpoint
+    // load categories from dedicated categories endpoint
     let mounted = true;
     async function load() {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/categories");
         if (!res.ok) return;
         const data = await res.json();
-        const map = new Map<string, string>();
-        for (const p of data || []) {
-          const c = p?.categories;
-          if (c?.id && c?.name) map.set(String(c.id), c.name);
-        }
-        const arr = Array.from(map.entries()).map(([id, name]) => ({
-          id,
-          name,
+        const arr = (data || []).map((c: any) => ({
+          id: String(c.id),
+          name: c.name,
         }));
         if (mounted) setCategories(arr);
-        // if no category selected, set first available
         if (mounted && !categoryId && arr.length > 0) setCategoryId(arr[0].id);
       } catch (e) {
         // ignore

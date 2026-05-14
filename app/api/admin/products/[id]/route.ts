@@ -7,7 +7,8 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams || {};
     const supabase = await createClient();
 
     const { data, error } = await supabase
@@ -39,7 +40,8 @@ export async function PUT(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams || {};
     const body = await req.json();
     const supabase = await createClient();
 
@@ -74,7 +76,8 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { id } = params;
+    const resolvedParams = await params;
+    const { id } = resolvedParams || {};
     const service = createServiceClient();
 
     const { error } = await service.from("products").delete().eq("id", id);
