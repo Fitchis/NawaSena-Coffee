@@ -28,7 +28,7 @@ export function Header() {
             <img
               src="/img/background/logo.png"
               alt="NawaSena"
-              className="w-10 h-10 object-contain bg-[#D92A2A] rounded-2xl p-1"
+              className="w-12 h-12 object-contain bg-[#D92A2A] rounded-2xl border border-black p-1"
             />
             <div className="hidden sm:block">
               <div className="text-sm font-semibold text-foreground">

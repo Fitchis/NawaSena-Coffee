@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 
 type Product = {
@@ -35,6 +36,7 @@ export default function ProductForm({
     initial?.category_id || null,
   );
   const [saving, setSaving] = useState(false);
+  const { toast } = useToast();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -83,27 +85,40 @@ export default function ProductForm({
                 const js2 = await res.json().catch(() => ({}));
                 if (!res.ok) {
                   console.error("Raw upload failed", js2);
-                  alert(
-                    `Upload failed: ${js2.error?.message || JSON.stringify(js2.error)}`,
-                  );
+                  toast({
+                    title: "Upload gagal",
+                    description:
+                      js2.error?.message || JSON.stringify(js2.error),
+                    variant: "destructive",
+                  });
                 } else {
                   payload.image_url = js2.publicUrl ?? payload.image_url;
                 }
               } catch (e) {
                 console.error("Raw fallback failed", e);
-                alert("Upload failed");
+                toast({
+                  title: "Upload gagal",
+                  description: "Upload gagal",
+                  variant: "destructive",
+                });
               }
             } else {
-              alert(
-                `Upload failed: ${js.error?.message || JSON.stringify(js.error)}`,
-              );
+              toast({
+                title: "Upload gagal",
+                description: js.error?.message || JSON.stringify(js.error),
+                variant: "destructive",
+              });
             }
           } else {
             payload.image_url = js.publicUrl ?? payload.image_url;
           }
         } catch (e) {
           console.error("Upload request failed", e);
-          alert("Upload request failed");
+          toast({
+            title: "Upload gagal",
+            description: "Permintaan upload gagal",
+            variant: "destructive",
+          });
         }
       }
 
@@ -124,7 +139,11 @@ export default function ProductForm({
       onSaved?.(data);
     } catch (err) {
       console.error(err);
-      alert("Gagal menyimpan produk");
+      toast({
+        title: "Gagal",
+        description: "Gagal menyimpan produk",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Award, Briefcase, Check, Handshake } from "lucide-react";
 
 export default function CollaborationPage() {
+  const { toast } = useToast();
   const [program, setProgram] = useState("Program Sponsorship");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -153,7 +155,11 @@ export default function CollaborationPage() {
                   e.preventDefault();
                   // validate
                   if (!program || !name || !email || !phone || !description) {
-                    alert("Mohon lengkapi semua field yang wajib.");
+                    toast({
+                      title: "Lengkapi field",
+                      description: "Mohon lengkapi semua field yang wajib.",
+                      variant: "destructive",
+                    });
                     return;
                   }
 

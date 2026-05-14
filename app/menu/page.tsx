@@ -35,6 +35,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { useMemo, useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 interface Product {
@@ -52,6 +53,7 @@ interface Product {
 }
 
 export default function MenuPage() {
+  const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,7 +103,11 @@ export default function MenuPage() {
   const handleNextFromInfo = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!checkoutForm.customer_name || !checkoutForm.customer_phone) {
-      alert("Mohon lengkapi semua data yang diperlukan");
+      toast({
+        title: "Lengkapi data",
+        description: "Mohon lengkapi semua data yang diperlukan",
+        variant: "destructive",
+      });
       return;
     }
     setCheckoutStep(2);
@@ -109,7 +115,11 @@ export default function MenuPage() {
 
   const handleCreateOrder = async () => {
     if (cartItems.length === 0) {
-      alert("Keranjang Anda kosong");
+      toast({
+        title: "Keranjang kosong",
+        description: "Tambahkan produk sebelum checkout",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -183,9 +193,11 @@ export default function MenuPage() {
       }, 1000) as unknown as number;
     } catch (error) {
       console.error("[v0] Order error:", error);
-      alert(
-        `Gagal membuat pesanan: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      toast({
+        title: "Gagal",
+        description: `Gagal membuat pesanan: ${error instanceof Error ? error.message : "Unknown error"}`,
+        variant: "destructive",
+      });
     } finally {
       setCheckoutLoading(false);
     }
@@ -271,21 +283,20 @@ export default function MenuPage() {
   const filteredProducts = (() => {
     if (selectedCategory === null) return products;
     const key = (selectedCategory || "").toLowerCase();
-    if (key === "kopi") {
-      return products.filter((p) =>
-        (p.categories?.name || "").toLowerCase().includes("kopi"),
-      );
-    }
     if (key === "makanan") {
       return products.filter((p) =>
         (p.categories?.name || "").toLowerCase().includes("makanan"),
       );
     }
-    // Minuman (fallback): items that are not kopi and not makanan
-    return products.filter((p) => {
-      const name = (p.categories?.name || "").toLowerCase();
-      return !name.includes("kopi") && !name.includes("makanan");
-    });
+    if (key === "minuman") {
+      // Group everything that's not 'makanan' into Minuman (includes 'kopi')
+      return products.filter((p) => {
+        const name = (p.categories?.name || "").toLowerCase();
+        return !name.includes("makanan");
+      });
+    }
+
+    return products;
   })();
 
   const handleAddToCart = (product: Product) => {
@@ -348,31 +359,10 @@ export default function MenuPage() {
           <div className="mb-8">
             <div className="rounded-lg border border-border bg-card p-1 flex items-center gap-2 max-w-lg">
               <button
-                onClick={() => setSelectedCategory("Kopi")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-150 ${
-                  selectedCategory === "Kopi"
-                    ? "bg-[#6b3f2a] text-white shadow-inner"
-                    : "bg-white text-foreground"
-                }`}
-                aria-pressed={selectedCategory === "Kopi"}
-              >
-                <Coffee size={16} />
-                <span
-                  className={
-                    selectedCategory === "Kopi"
-                      ? "font-semibold"
-                      : "font-medium text-foreground/70"
-                  }
-                >
-                  Kopi
-                </span>
-              </button>
-
-              <button
                 onClick={() => setSelectedCategory("Minuman")}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-150 ${
                   selectedCategory === "Minuman"
-                    ? "bg-[#6b3f2a] text-white shadow-inner"
+                    ? "bg-[#D92A2A] text-white shadow-inner"
                     : "bg-white text-foreground"
                 }`}
                 aria-pressed={selectedCategory === "Minuman"}
@@ -393,7 +383,7 @@ export default function MenuPage() {
                 onClick={() => setSelectedCategory("Makanan")}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md transition-colors duration-150 ${
                   selectedCategory === "Makanan"
-                    ? "bg-[#6b3f2a] text-white shadow-inner"
+                    ? "bg-[#D92A2A] text-white shadow-inner"
                     : "bg-white text-foreground"
                 }`}
                 aria-pressed={selectedCategory === "Makanan"}
@@ -434,9 +424,7 @@ export default function MenuPage() {
                     >
                       <div className="h-44 w-full bg-gray-100 overflow-hidden">
                         <img
-                          src={
-                            product.image_url || "/img/placeholder-drink.png"
-                          }
+                          src={product.image_url || "https://placehold.co/400"}
                           alt={product.name}
                           className="w-full h-full object-cover"
                         />

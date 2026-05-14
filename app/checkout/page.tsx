@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import {
@@ -22,6 +23,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { items, total, removeItem, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     customer_name: "",
     customer_email: "",
@@ -45,12 +47,20 @@ export default function CheckoutPage() {
       !formData.customer_email ||
       !formData.delivery_address
     ) {
-      alert("Mohon lengkapi semua data yang diperlukan");
+      toast({
+        title: "Lengkapi data",
+        description: "Mohon lengkapi semua data yang diperlukan",
+        variant: "destructive",
+      });
       return;
     }
 
     if (items.length === 0) {
-      alert("Keranjang Anda kosong");
+      toast({
+        title: "Keranjang kosong",
+        description: "Keranjang Anda kosong",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -85,9 +95,11 @@ export default function CheckoutPage() {
       router.push(`/order-confirmation/${result.order.id}`);
     } catch (error) {
       console.error("[v0] Order error:", error);
-      alert(
-        `Gagal membuat pesanan: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      toast({
+        title: "Gagal",
+        description: `Gagal membuat pesanan: ${error instanceof Error ? error.message : "Unknown error"}`,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
