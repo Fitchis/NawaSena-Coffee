@@ -163,7 +163,7 @@ export default function CollaborationPage() {
                     return;
                   }
 
-                  const whatsappNumber = "6281390070770";
+                  const whatsappNumber = "62881026970075";
                   const lines = [
                     "Halo NawaSena,",
                     "",

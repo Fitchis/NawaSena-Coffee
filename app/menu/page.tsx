@@ -226,6 +226,12 @@ export default function MenuPage() {
     { id: "hazelnut", name: "Hazelnut Syrup", price: 3000 },
   ];
 
+  const FOOD_ADDONS = [
+    { id: "telor_ceplok", name: "Telor Ceplok", price: 3000 },
+    { id: "keju", name: "Keju", price: 5000 },
+    { id: "sayur", name: "Sayur", price: 2500 },
+  ];
+
   useEffect(() => {
     let mounted = true;
     fetch("/api/addons")
@@ -313,6 +319,13 @@ export default function MenuPage() {
 
     const itemPrice = selectedProduct.price;
     const addons = selectedAddons;
+    const isFood = (selectedProduct.categories?.name || "")
+      .toLowerCase()
+      .includes("makanan");
+
+    const options = isFood
+      ? { spiciness: sugarLevel }
+      : { sugar: sugarLevel, ice: iceLevel };
 
     addItem({
       product_id: selectedProduct.id,
@@ -320,7 +333,7 @@ export default function MenuPage() {
       price: itemPrice,
       image_url: selectedProduct.image_url,
       quantity: 1,
-      options: { sugar: sugarLevel, ice: iceLevel },
+      options,
       addons,
     });
 
@@ -629,39 +642,74 @@ export default function MenuPage() {
 
           <div className="space-y-4 max-h-[60vh] overflow-auto pt-2">
             <div>
-              <h4 className="font-semibold mb-2">Level Gula</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {["Normal", "Half Sugar", "Less Sugar", "No Sugar"].map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSugarLevel(s)}
-                    className={`py-2 px-3 rounded-md border ${sugarLevel === s ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
+              {(selectedProduct?.categories?.name || "")
+                .toLowerCase()
+                .includes("makanan") ? (
+                <>
+                  <h4 className="font-semibold mb-2">Level Kepedasan</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["Normal", "Level 1", "Level 2", "Level 3"].map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setSugarLevel(s)}
+                        className={`py-2 px-3 rounded-md border ${sugarLevel === s ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h4 className="font-semibold mb-2">Level Gula</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["Normal", "Half Sugar", "Less Sugar", "No Sugar"].map(
+                      (s) => (
+                        <button
+                          key={s}
+                          onClick={() => setSugarLevel(s)}
+                          className={`py-2 px-3 rounded-md border ${sugarLevel === s ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
+                        >
+                          {s}
+                        </button>
+                      ),
+                    )}
+                  </div>
+                </>
+              )}
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2">Level Es</h4>
-              <div className="grid grid-cols-3 gap-2">
-                {["Normal Ice", "Less Ice", "No Ice"].map((i) => (
-                  <button
-                    key={i}
-                    onClick={() => setIceLevel(i)}
-                    className={`py-2 px-3 rounded-md border ${iceLevel === i ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
-                  >
-                    {i}
-                  </button>
-                ))}
-              </div>
+              {/* only show ice selection for beverages */}
+              {!(selectedProduct?.categories?.name || "")
+                .toLowerCase()
+                .includes("makanan") && (
+                <>
+                  <h4 className="font-semibold mb-2">Level Es</h4>
+                  <div className="grid grid-cols-3 gap-2">
+                    {["Normal Ice", "Less Ice", "No Ice"].map((i) => (
+                      <button
+                        key={i}
+                        onClick={() => setIceLevel(i)}
+                        className={`py-2 px-3 rounded-md border ${iceLevel === i ? "bg-[#D92A2A] text-white" : "bg-transparent"}`}
+                      >
+                        {i}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <div>
               <h4 className="font-semibold mb-2">Add-on</h4>
               <div className="space-y-2">
-                {ADDONS.map((a) => {
+                {((selectedProduct?.categories?.name || "")
+                  .toLowerCase()
+                  .includes("makanan")
+                  ? FOOD_ADDONS
+                  : ADDONS
+                ).map((a) => {
                   const checked = selectedAddons.find((x) => x.id === a.id);
                   return (
                     <label
